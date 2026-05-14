@@ -1,67 +1,17 @@
 import Link from 'next/link';
-import { ArrowRight, Building2, Home, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import HeroSearch from '@/components/HeroSearch';
-import PropertyCard from '@/components/PropertyCard';
-import ProjectCard from '@/components/ProjectCard';
-import LandCard from '@/components/LandCard';
 import { Button } from '@/components/ui/button';
-import { getPayloadHMR } from '@payloadcms/next/utilities';
-import configPromise from '@/payload.config';
 
 // Force dynamic rendering since we need database access
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function HomePage() {
-  try {
-    const payload = await getPayloadHMR({ config: configPromise });
-
-    // Fetch featured properties
-    const { docs: featuredProperties } = await payload.find({
-      collection: 'properties',
-      where: {
-        featured: { equals: true },
-        status: { equals: 'available' },
-      },
-      limit: 3,
-    });
-
-    // Fetch featured projects
-    const { docs: featuredProjects } = await payload.find({
-      collection: 'projects',
-      where: {
-        featured: { equals: true },
-      },
-      limit: 3,
-    });
-
-    // Fetch featured lands
-    const { docs: featuredLands } = await payload.find({
-      collection: 'lands',
-      where: {
-        featured: { equals: true },
-        status: { equals: 'available' },
-      },
-      limit: 3,
-    });
-
-    // Get counts
-    const { totalDocs: propertiesCount } = await payload.find({
-      collection: 'properties',
-      where: { status: { equals: 'available' } },
-      limit: 0,
-    });
-
-    const { totalDocs: landsCount } = await payload.find({
-      collection: 'lands',
-      where: { status: { equals: 'available' } },
-      limit: 0,
-    });
-
-    const { totalDocs: projectsCount } = await payload.find({
-      collection: 'projects',
-      limit: 0,
-    });
+  // Temporary: Return static content without database
+  const propertiesCount = 0;
+  const landsCount = 0;
+  const projectsCount = 0;
 
   return (
     <div>
@@ -110,89 +60,25 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Properties */}
-      {featuredProperties.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="font-serif text-4xl font-bold text-gray-900 mb-2">
-                  Featured Properties
-                </h2>
-                <p className="text-gray-600">
-                  Handpicked premium properties for you
-                </p>
-              </div>
-              <Button asChild variant="outline">
-                <Link href="/properties">
-                  View All <ArrowRight className="ml-2" size={16} />
-                </Link>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredProperties.map((property: any) => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
-            </div>
+      {/* Coming Soon Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-serif text-4xl font-bold text-gray-900 mb-4">
+            Property Listings Coming Soon
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            We're currently setting up our database with premium properties. Check back soon for amazing listings!
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Button asChild>
+              <Link href="/contact">Contact Us</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/properties">Browse Properties</Link>
+            </Button>
           </div>
-        </section>
-      )}
-
-      {/* Featured Projects */}
-      {featuredProjects.length > 0 && (
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="font-serif text-4xl font-bold text-gray-900 mb-2">
-                  New Development Projects
-                </h2>
-                <p className="text-gray-600">
-                  Upcoming and ongoing residential enclaves
-                </p>
-              </div>
-              <Button asChild variant="outline">
-                <Link href="/projects">
-                  View All <ArrowRight className="ml-2" size={16} />
-                </Link>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredProjects.map((project: any) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Featured Lands */}
-      {featuredLands.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="font-serif text-4xl font-bold text-gray-900 mb-2">
-                  Premium Land Plots
-                </h2>
-                <p className="text-gray-600">
-                  Build your dream home on these prime locations
-                </p>
-              </div>
-              <Button asChild variant="outline">
-                <Link href="/lands">
-                  View All <ArrowRight className="ml-2" size={16} />
-                </Link>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredLands.map((land: any) => (
-                <LandCard key={land.id} land={land} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-16 bg-primary text-white">
@@ -210,16 +96,4 @@ export default async function HomePage() {
       </section>
     </div>
   );
-  } catch (error) {
-    console.error('Error loading homepage:', error);
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to BuildBase</h1>
-          <p className="text-gray-600 mb-8">We're setting up the site. Please check back soon!</p>
-          <p className="text-sm text-gray-500">Error: Unable to connect to database</p>
-        </div>
-      </div>
-    );
-  }
 }
