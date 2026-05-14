@@ -10,56 +10,58 @@ import configPromise from '@/payload.config';
 
 // Force dynamic rendering since we need database access
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function HomePage() {
-  const payload = await getPayloadHMR({ config: configPromise });
+  try {
+    const payload = await getPayloadHMR({ config: configPromise });
 
-  // Fetch featured properties
-  const { docs: featuredProperties } = await payload.find({
-    collection: 'properties',
-    where: {
-      featured: { equals: true },
-      status: { equals: 'available' },
-    },
-    limit: 3,
-  });
+    // Fetch featured properties
+    const { docs: featuredProperties } = await payload.find({
+      collection: 'properties',
+      where: {
+        featured: { equals: true },
+        status: { equals: 'available' },
+      },
+      limit: 3,
+    });
 
-  // Fetch featured projects
-  const { docs: featuredProjects } = await payload.find({
-    collection: 'projects',
-    where: {
-      featured: { equals: true },
-    },
-    limit: 3,
-  });
+    // Fetch featured projects
+    const { docs: featuredProjects } = await payload.find({
+      collection: 'projects',
+      where: {
+        featured: { equals: true },
+      },
+      limit: 3,
+    });
 
-  // Fetch featured lands
-  const { docs: featuredLands } = await payload.find({
-    collection: 'lands',
-    where: {
-      featured: { equals: true },
-      status: { equals: 'available' },
-    },
-    limit: 3,
-  });
+    // Fetch featured lands
+    const { docs: featuredLands } = await payload.find({
+      collection: 'lands',
+      where: {
+        featured: { equals: true },
+        status: { equals: 'available' },
+      },
+      limit: 3,
+    });
 
-  // Get counts
-  const { totalDocs: propertiesCount } = await payload.find({
-    collection: 'properties',
-    where: { status: { equals: 'available' } },
-    limit: 0,
-  });
+    // Get counts
+    const { totalDocs: propertiesCount } = await payload.find({
+      collection: 'properties',
+      where: { status: { equals: 'available' } },
+      limit: 0,
+    });
 
-  const { totalDocs: landsCount } = await payload.find({
-    collection: 'lands',
-    where: { status: { equals: 'available' } },
-    limit: 0,
-  });
+    const { totalDocs: landsCount } = await payload.find({
+      collection: 'lands',
+      where: { status: { equals: 'available' } },
+      limit: 0,
+    });
 
-  const { totalDocs: projectsCount } = await payload.find({
-    collection: 'projects',
-    limit: 0,
-  });
+    const { totalDocs: projectsCount } = await payload.find({
+      collection: 'projects',
+      limit: 0,
+    });
 
   return (
     <div>
@@ -208,4 +210,16 @@ export default async function HomePage() {
       </section>
     </div>
   );
+  } catch (error) {
+    console.error('Error loading homepage:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to BuildBase</h1>
+          <p className="text-gray-600 mb-8">We're setting up the site. Please check back soon!</p>
+          <p className="text-sm text-gray-500">Error: Unable to connect to database</p>
+        </div>
+      </div>
+    );
+  }
 }
