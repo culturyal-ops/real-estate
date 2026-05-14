@@ -2,6 +2,9 @@ import ProjectCard from '@/components/ProjectCard';
 import { getPayloadHMR } from '@payloadcms/next/utilities';
 import configPromise from '@/payload.config';
 
+// Force dynamic rendering since we need database access
+export const dynamic = 'force-dynamic';
+
 export default async function ProjectsPage() {
   const payload = await getPayloadHMR({ config: configPromise });
 

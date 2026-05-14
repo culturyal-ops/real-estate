@@ -14,8 +14,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Disable static optimization for pages that need database access
+  // This ensures pages are rendered at request time, not build time
   experimental: {
-    reactCompiler: false,
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 

@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Bed, Bath, Maximize, MapPin, Calendar, Home, Download, AlertCircle } from 'lucide-react';
+import { Bed, Bath, Maximize, MapPin, AlertCircle, Download } from 'lucide-react';
 import { getPayloadHMR } from '@payloadcms/next/utilities';
 import configPromise from '@/payload.config';
 import { Button } from '@/components/ui/button';
@@ -9,15 +8,19 @@ import InquiryForm from '@/components/InquiryForm';
 import { formatPrice, formatArea } from '@/lib/utils';
 import type { Metadata } from 'next';
 
+// Force dynamic rendering since we need database access
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const payload = await getPayloadHMR({ config: configPromise });
+  const { slug } = await params;
   const { docs } = await payload.find({
     collection: 'properties',
-    where: { slug: { equals: params.slug } },
+    where: { slug: { equals: slug } },
     limit: 1,
   });
 
@@ -41,13 +44,14 @@ export async function generateMetadata({
 export default async function PropertyDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const payload = await getPayloadHMR({ config: configPromise });
+  const { slug } = await params;
   
   const { docs } = await payload.find({
     collection: 'properties',
-    where: { slug: { equals: params.slug } },
+    where: { slug: { equals: slug } },
     limit: 1,
   });
 

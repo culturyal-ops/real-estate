@@ -5,13 +5,13 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next dev",
-    "build": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next build --legacy-peer-deps",
+    "build": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next build",
     "start": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next start",
-    "vercel-build": "npm install --legacy-peer-deps && next build",
     "lint": "next lint",
     "payload": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload",
     "generate:types": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload generate:types",
-    "seed": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" tsx src/lib/seed.ts"
+    "seed": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" tsx src/lib/seed.ts",
+    "vercel-build": "next build"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.0.0-beta.117",
@@ -32,7 +32,7 @@
     "graphql": "^16.8.1",
     "lucide-react": "^0.344.0",
     "mapbox-gl": "^3.1.2",
-    "next": "15.1.0",
+    "next": "^15.1.4",
     "payload": "3.0.0-beta.117",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -44,16 +44,16 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
-    "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "15.0.3",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "tsx": "^4.7.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.1.4",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -3,59 +3,63 @@ import FilterSidebar from '@/components/FilterSidebar';
 import { getPayloadHMR } from '@payloadcms/next/utilities';
 import configPromise from '@/payload.config';
 
+// Force dynamic rendering since we need database access
+export const dynamic = 'force-dynamic';
+
 export default async function PropertiesPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const payload = await getPayloadHMR({ config: configPromise });
+  const params = await searchParams;
 
   // Build query based on filters
   const where: any = {};
 
-  if (searchParams.status) {
-    where.status = { equals: searchParams.status };
+  if (params.status) {
+    where.status = { equals: params.status };
   } else {
     where.status = { equals: 'available' };
   }
 
-  if (searchParams.type) {
-    where.type = { equals: searchParams.type };
+  if (params.type) {
+    where.type = { equals: params.type };
   }
 
-  if (searchParams.bedrooms) {
-    where.bedrooms = { equals: parseInt(searchParams.bedrooms as string) };
+  if (params.bedrooms) {
+    where.bedrooms = { equals: parseInt(params.bedrooms as string) };
   }
 
-  if (searchParams.minPrice || searchParams.maxPrice) {
+  if (params.minPrice || params.maxPrice) {
     where.price = {};
-    if (searchParams.minPrice) {
-      where.price.greater_than_equal = parseFloat(searchParams.minPrice as string);
+    if (params.minPrice) {
+      where.price.greater_than_equal = parseFloat(params.minPrice as string);
     }
-    if (searchParams.maxPrice) {
-      where.price.less_than_equal = parseFloat(searchParams.maxPrice as string);
+    if (params.maxPrice) {
+      where.price.less_than_equal = parseFloat(params.maxPrice as string);
     }
   }
 
-  if (searchParams.minArea || searchParams.maxArea) {
+  if (params.minArea || params.maxArea) {
     where.sqftSuperBuiltUp = {};
-    if (searchParams.minArea) {
-      where.sqftSuperBuiltUp.greater_than_equal = parseFloat(searchParams.minArea as string);
+    if (params.minArea) {
+      where.sqftSuperBuiltUp.greater_than_equal = parseFloat(params.minArea as string);
     }
-    if (searchParams.maxArea) {
-      where.sqftSuperBuiltUp.less_than_equal = parseFloat(searchParams.maxArea as string);
+    if (params.maxArea) {
+      where.sqftSuperBuiltUp.less_than_equal = parseFloat(params.maxArea as string);
     }
   }
 
-  if (searchParams.city) {
-    where['location.city'] = { contains: searchParams.city };
+  if (params.city) {
+    where['location.city'] = { contains: params.city };
   }
 
-  if (searchParams.search) {
+  if (params.search) {
     where.or = [
-      { title: { contains: searchParams.search } },
-      { 'location.city': { contains: searchParams.search } },
-      { 'location.address': { contains: searchParams.search } },
+      { title: { contains: params.search } },
+      { 'location.city': { contains: params.search } },
+      { 'location.address': { contains: params.search } },
     ];
   }
 

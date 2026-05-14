@@ -3,43 +3,47 @@ import FilterSidebar from '@/components/FilterSidebar';
 import { getPayloadHMR } from '@payloadcms/next/utilities';
 import configPromise from '@/payload.config';
 
+// Force dynamic rendering since we need database access
+export const dynamic = 'force-dynamic';
+
 export default async function LandsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const payload = await getPayloadHMR({ config: configPromise });
+  const params = await searchParams;
 
   const where: any = {};
 
-  if (searchParams.status) {
-    where.status = { equals: searchParams.status };
+  if (params.status) {
+    where.status = { equals: params.status };
   } else {
     where.status = { equals: 'available' };
   }
 
-  if (searchParams.minPrice || searchParams.maxPrice) {
+  if (params.minPrice || params.maxPrice) {
     where.price = {};
-    if (searchParams.minPrice) {
-      where.price.greater_than_equal = parseFloat(searchParams.minPrice as string);
+    if (params.minPrice) {
+      where.price.greater_than_equal = parseFloat(params.minPrice as string);
     }
-    if (searchParams.maxPrice) {
-      where.price.less_than_equal = parseFloat(searchParams.maxPrice as string);
+    if (params.maxPrice) {
+      where.price.less_than_equal = parseFloat(params.maxPrice as string);
     }
   }
 
-  if (searchParams.minArea || searchParams.maxArea) {
+  if (params.minArea || params.maxArea) {
     where.totalArea = {};
-    if (searchParams.minArea) {
-      where.totalArea.greater_than_equal = parseFloat(searchParams.minArea as string);
+    if (params.minArea) {
+      where.totalArea.greater_than_equal = parseFloat(params.minArea as string);
     }
-    if (searchParams.maxArea) {
-      where.totalArea.less_than_equal = parseFloat(searchParams.maxArea as string);
+    if (params.maxArea) {
+      where.totalArea.less_than_equal = parseFloat(params.maxArea as string);
     }
   }
 
-  if (searchParams.city) {
-    where['location.city'] = { contains: searchParams.city };
+  if (params.city) {
+    where['location.city'] = { contains: params.city };
   }
 
   const { docs: lands, totalDocs } = await payload.find({
