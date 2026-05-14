@@ -4,8 +4,6 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import sharp from 'sharp';
-import { cloudStorage } from '@payloadcms/plugin-cloud-storage';
-import { cloudinaryAdapter } from '@payloadcms/plugin-cloud-storage/cloudinary';
 
 import { Properties } from './collections/Properties';
 import { Lands } from './collections/Lands';
@@ -36,18 +34,4 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [
-    cloudStorage({
-      collections: {
-        media: {
-          adapter: cloudinaryAdapter({
-            cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
-            apiKey: process.env.CLOUDINARY_API_KEY || '',
-            apiSecret: process.env.CLOUDINARY_API_SECRET || '',
-            folder: 'buildbase',
-          }),
-        },
-      },
-    }),
-  ],
 });
