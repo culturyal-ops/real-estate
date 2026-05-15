@@ -33,8 +33,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                  <p className="text-gray-600">+91 98765 43210</p>
-                  <p className="text-gray-600">+91 98765 43211</p>
+                  <p className="text-gray-600">+91 94470 12345</p>
+                  <p className="text-gray-600">+91 94470 67890</p>
                 </div>
               </div>
 
@@ -56,8 +56,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Office</h3>
                   <p className="text-gray-600">
-                    123 MG Road, Bangalore<br />
-                    Karnataka 560001, India
+                    BuildBase Realty<br />
+                    MC Road, Kottayam<br />
+                    Kerala 686001, India
                   </p>
                 </div>
               </div>

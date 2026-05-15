@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Building2, Home, MapPin, Sparkles, TrendingUp, Award, Bed, Bath, Maximize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { mockProperties, mockLands, mockProjects } from '@/lib/mockData';
@@ -148,6 +149,157 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-5xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600">
+              Your journey to finding the perfect property in 4 simple steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              {
+                step: '01',
+                title: 'Browse Properties',
+                description: 'Explore our curated collection of premium properties',
+                icon: '🏠',
+              },
+              {
+                step: '02',
+                title: 'Schedule Visit',
+                description: 'Book a site visit at your convenience',
+                icon: '📅',
+              },
+              {
+                step: '03',
+                title: 'Get Expert Advice',
+                description: 'Consult with our property experts',
+                icon: '💼',
+              },
+              {
+                step: '04',
+                title: 'Close the Deal',
+                description: 'Complete paperwork and move in',
+                icon: '🔑',
+              },
+            ].map((item, index) => (
+              <div key={index} className="relative text-center group">
+                <div className="mb-6">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </div>
+                  <div className="text-6xl font-bold text-gray-100 absolute top-0 left-1/2 -translate-x-1/2 -z-10">
+                    {item.step}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+                {index < 3 && (
+                  <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -z-10"></div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-5xl font-bold text-gray-900 mb-4">
+              What Our Clients Say
+            </h2>
+            <p className="text-xl text-gray-600">
+              Real stories from happy homeowners
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Rajesh Kumar',
+                role: 'Villa Owner',
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+                text: 'BuildBase helped us find our dream villa in Whitefield. The entire process was smooth and transparent. Highly recommended!',
+                rating: 5,
+              },
+              {
+                name: 'Priya Sharma',
+                role: 'Apartment Buyer',
+                image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+                text: 'Excellent service and great property options. The team was very professional and helped us every step of the way.',
+                rating: 5,
+              },
+              {
+                name: 'Amit Patel',
+                role: 'Land Investor',
+                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
+                text: 'Found the perfect plot for my future home. The documentation process was hassle-free. Thank you BuildBase!',
+                rating: 5,
+              },
+            ].map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                <div className="flex items-center mb-6">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                  </div>
+                </div>
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-700 leading-relaxed italic">"{testimonial.text}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Banner */}
+      <section className="py-16 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold mb-2">15+</div>
+              <div className="text-gray-300">Years Experience</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">₹500Cr+</div>
+              <div className="text-gray-300">Properties Sold</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">98%</div>
+              <div className="text-gray-300">Client Satisfaction</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">24/7</div>
+              <div className="text-gray-300">Customer Support</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section with Stagger Animation - REMOVED DUPLICATE */}
 
       {/* Property Types Section with Hover Effects */}
       <section className="py-24 bg-white">
