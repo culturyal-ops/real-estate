@@ -1,8 +1,17 @@
 import Link from 'next/link';
-import { ArrowRight, Building2, Home, MapPin, Sparkles, TrendingUp, Award } from 'lucide-react';
+import { ArrowRight, Building2, Home, MapPin, Sparkles, TrendingUp, Award, Bed, Bath, Maximize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { mockProperties, mockLands, mockProjects } from '@/lib/mockData';
+import { formatPrice, formatArea } from '@/lib/utils';
 
 export default function HomePage() {
+  const featuredProperties = mockProperties.filter(p => p.featured).slice(0, 3);
+  const featuredProjects = mockProjects.filter(p => p.featured).slice(0, 3);
+  const featuredLands = mockLands.filter(l => l.featured).slice(0, 3);
+  
+  const propertiesCount = mockProperties.length;
+  const landsCount = mockLands.length;
+  const projectsCount = mockProjects.length;
   return (
     <div className="overflow-hidden">
       {/* Hero Section with Parallax */}
@@ -73,15 +82,15 @@ export default function HomePage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="transform hover:scale-110 transition-transform duration-300">
-              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up">250+</div>
+              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up">{propertiesCount}+</div>
               <div className="text-sm md:text-base opacity-90">Properties Available</div>
             </div>
             <div className="transform hover:scale-110 transition-transform duration-300">
-              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up animation-delay-200">180+</div>
+              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up animation-delay-200">{landsCount}+</div>
               <div className="text-sm md:text-base opacity-90">Land Plots</div>
             </div>
             <div className="transform hover:scale-110 transition-transform duration-300">
-              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up animation-delay-400">45+</div>
+              <div className="text-5xl md:text-6xl font-bold mb-2 animate-count-up animation-delay-400">{projectsCount}+</div>
               <div className="text-sm md:text-base opacity-90">New Projects</div>
             </div>
             <div className="transform hover:scale-110 transition-transform duration-300">
@@ -186,6 +195,187 @@ export default function HomePage() {
                     <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       View All <ArrowRight className="ml-2" size={16} />
                     </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Properties */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="font-serif text-5xl font-bold text-gray-900 mb-4">
+                Featured Properties
+              </h2>
+              <p className="text-xl text-gray-600">
+                Handpicked premium properties just for you
+              </p>
+            </div>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/properties">
+                View All <ArrowRight className="ml-2" size={20} />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredProperties.map((property, index) => (
+              <Link
+                key={property.id}
+                href={`/properties/${property.slug}`}
+                className={`group block animate-fade-in-up animation-delay-${index * 200}`}
+              >
+                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div className="relative h-64 overflow-hidden">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                      style={{ backgroundImage: `url('${property.gallery[0].image.url}')` }}
+                    />
+                    <div className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold">
+                      {property.priceLabel}
+                    </div>
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold capitalize">
+                      {property.type}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                      {property.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 flex items-center">
+                      <MapPin size={16} className="mr-2" />
+                      {property.location.address}, {property.location.city}
+                    </p>
+                    <div className="flex items-center justify-between text-gray-700 pt-4 border-t">
+                      <div className="flex items-center">
+                        <Bed size={18} className="mr-1" />
+                        <span className="text-sm font-semibold">{property.bedrooms} Beds</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Bath size={18} className="mr-1" />
+                        <span className="text-sm font-semibold">{property.bathrooms} Baths</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Maximize size={18} className="mr-1" />
+                        <span className="text-sm font-semibold">{formatArea(property.sqftSuperBuiltUp)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Projects */}
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="font-serif text-5xl font-bold text-gray-900 mb-4">
+                New Development Projects
+              </h2>
+              <p className="text-xl text-gray-600">
+                Upcoming and ongoing residential enclaves
+              </p>
+            </div>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/projects">
+                View All <ArrowRight className="ml-2" size={20} />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredProjects.map((project, index) => (
+              <div
+                key={project.id}
+                className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up animation-delay-${index * 200}`}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                    style={{ backgroundImage: `url('${project.gallery[0].image.url}')` }}
+                  />
+                  <div className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold capitalize">
+                    {project.status}
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 flex items-center">
+                    <MapPin size={16} className="mr-2" />
+                    {project.location.address}, {project.location.city}
+                  </p>
+                  <p className="text-gray-700 mb-4 line-clamp-2">
+                    {project.description}
+                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-600 pt-4 border-t">
+                    <span>{project.totalUnits} Total Units</span>
+                    <span className="text-primary font-semibold">{project.availableUnits} Available</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Lands */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="font-serif text-5xl font-bold text-gray-900 mb-4">
+                Premium Land Plots
+              </h2>
+              <p className="text-xl text-gray-600">
+                Build your dream home on these prime locations
+              </p>
+            </div>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/lands">
+                View All <ArrowRight className="ml-2" size={20} />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredLands.map((land, index) => (
+              <div
+                key={land.id}
+                className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up animation-delay-${index * 200}`}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                    style={{ backgroundImage: `url('${land.gallery[0].image.url}')` }}
+                  />
+                  <div className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    {land.priceLabel}
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                    {land.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 flex items-center">
+                    <MapPin size={16} className="mr-2" />
+                    {land.location.address}, {land.location.city}
+                  </p>
+                  <p className="text-gray-700 mb-4 line-clamp-2">
+                    {land.description}
+                  </p>
+                  <div className="flex items-center justify-between text-sm pt-4 border-t">
+                    <span className="text-gray-600">Total Area</span>
+                    <span className="text-primary font-semibold text-lg">{land.totalArea} sq.ft</span>
                   </div>
                 </div>
               </div>

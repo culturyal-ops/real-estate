@@ -1,40 +1,30 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Bed, Bath, Maximize, MapPin, AlertCircle, Download } from 'lucide-react';
-import { getPayloadHMR } from '@payloadcms/next/utilities';
-import configPromise from '@/payload.config';
 import { Button } from '@/components/ui/button';
 import InquiryForm from '@/components/InquiryForm';
 import { formatPrice, formatArea } from '@/lib/utils';
 import type { Metadata } from 'next';
-
-// Force dynamic rendering since we need database access
-export const dynamic = 'force-dynamic';
+import { mockProperties } from '@/lib/mockData';
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const payload = await getPayloadHMR({ config: configPromise });
   const { slug } = await params;
-  const { docs } = await payload.find({
-    collection: 'properties',
-    where: { slug: { equals: slug } },
-    limit: 1,
-  });
+  const property = mockProperties.find(p => p.slug === slug);
 
-  const property = docs[0];
   if (!property) return {};
 
   const imageUrl = property.gallery?.[0]?.image?.url || '';
 
   return {
-    title: property.metaTitle || `${property.title} - BuildBase`,
-    description: property.metaDescription || property.description,
+    title: `${property.title} - BuildBase`,
+    description: property.description,
     openGraph: {
-      title: property.metaTitle || property.title,
-      description: property.metaDescription,
+      title: property.title,
+      description: property.description,
       images: imageUrl ? [imageUrl] : [],
       type: 'website',
     },
@@ -46,32 +36,21 @@ export default async function PropertyDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const payload = await getPayloadHMR({ config: configPromise });
   const { slug } = await params;
-  
-  const { docs } = await payload.find({
-    collection: 'properties',
-    where: { slug: { equals: slug } },
-    limit: 1,
-  });
+  const property = mockProperties.find(p => p.slug === slug);
 
-  const property = docs[0];
   if (!property) notFound();
 
   const isSoldOrBooked = property.status === 'sold' || property.status === 'booked';
 
   // Get similar properties
-  const { docs: similarProperties } = await payload.find({
-    collection: 'properties',
-    where: {
-      and: [
-        { id: { not_equals: property.id } },
-        { 'location.city': { equals: property.location.city } },
-        { status: { equals: 'available' } },
-      ],
-    },
-    limit: 3,
-  });
+  const similarProperties = mockProperties
+    .filter(p => 
+      p.id !== property.id && 
+      p.location.city === property.location.city && 
+      p.status === 'available'
+    )
+    .slice(0, 3);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -257,10 +236,23 @@ export default async function PropertyDetailPage({
               Similar Properties
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {similarProperties.map((prop: any) => {
-                const PropertyCard = require('@/components/PropertyCard').default;
-                return <PropertyCard key={prop.id} property={prop} />;
-              })}
+              {similarProperties.map((prop: any) => (
+                <div key={prop.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="relative h-48">
+                    <Image
+                      src={prop.gallery[0].image.url}
+                      alt={prop.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-2">{prop.title}</h3>
+                    <p className="text-gray-600 text-sm mb-2">{prop.location.address}</p>
+                    <p className="text-primary font-bold text-xl">{prop.priceLabel}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

@@ -1,18 +1,9 @@
 import ProjectCard from '@/components/ProjectCard';
-import { getPayloadHMR } from '@payloadcms/next/utilities';
-import configPromise from '@/payload.config';
+import { mockProjects } from '@/lib/mockData';
 
-// Force dynamic rendering since we need database access
-export const dynamic = 'force-dynamic';
-
-export default async function ProjectsPage() {
-  const payload = await getPayloadHMR({ config: configPromise });
-
-  const { docs: projects, totalDocs } = await payload.find({
-    collection: 'projects',
-    limit: 50,
-    sort: '-createdAt',
-  });
+export default function ProjectsPage() {
+  const projects = mockProjects;
+  const totalDocs = projects.length;
 
   return (
     <div className="min-h-screen bg-gray-50">

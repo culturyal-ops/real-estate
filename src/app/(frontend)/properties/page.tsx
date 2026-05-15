@@ -1,74 +1,10 @@
 import PropertyCard from '@/components/PropertyCard';
 import FilterSidebar from '@/components/FilterSidebar';
-import { getPayloadHMR } from '@payloadcms/next/utilities';
-import configPromise from '@/payload.config';
+import { mockProperties } from '@/lib/mockData';
 
-// Force dynamic rendering since we need database access
-export const dynamic = 'force-dynamic';
-
-export default async function PropertiesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const payload = await getPayloadHMR({ config: configPromise });
-  const params = await searchParams;
-
-  // Build query based on filters
-  const where: any = {};
-
-  if (params.status) {
-    where.status = { equals: params.status };
-  } else {
-    where.status = { equals: 'available' };
-  }
-
-  if (params.type) {
-    where.type = { equals: params.type };
-  }
-
-  if (params.bedrooms) {
-    where.bedrooms = { equals: parseInt(params.bedrooms as string) };
-  }
-
-  if (params.minPrice || params.maxPrice) {
-    where.price = {};
-    if (params.minPrice) {
-      where.price.greater_than_equal = parseFloat(params.minPrice as string);
-    }
-    if (params.maxPrice) {
-      where.price.less_than_equal = parseFloat(params.maxPrice as string);
-    }
-  }
-
-  if (params.minArea || params.maxArea) {
-    where.sqftSuperBuiltUp = {};
-    if (params.minArea) {
-      where.sqftSuperBuiltUp.greater_than_equal = parseFloat(params.minArea as string);
-    }
-    if (params.maxArea) {
-      where.sqftSuperBuiltUp.less_than_equal = parseFloat(params.maxArea as string);
-    }
-  }
-
-  if (params.city) {
-    where['location.city'] = { contains: params.city };
-  }
-
-  if (params.search) {
-    where.or = [
-      { title: { contains: params.search } },
-      { 'location.city': { contains: params.search } },
-      { 'location.address': { contains: params.search } },
-    ];
-  }
-
-  const { docs: properties, totalDocs } = await payload.find({
-    collection: 'properties',
-    where,
-    limit: 50,
-    sort: '-createdAt',
-  });
+export default function PropertiesPage() {
+  const properties = mockProperties;
+  const totalDocs = properties.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
