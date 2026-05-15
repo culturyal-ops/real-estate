@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Bed, Bath, Maximize, MapPin, AlertCircle, Download } from 'lucide-react';
+import { Bed, Bath, Maximize, MapPin, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import InquiryForm from '@/components/InquiryForm';
 import { formatPrice, formatArea } from '@/lib/utils';
@@ -216,15 +216,6 @@ export default async function PropertyDetailPage({
                   relatedListing={property.slug}
                 />
               </div>
-            )}
-
-            {property.brochure && (
-              <Button asChild className="w-full" variant="outline">
-                <a href={property.brochure.url} download>
-                  <Download className="mr-2" size={18} />
-                  Download Brochure
-                </a>
-              </Button>
             )}
           </div>
         </div>
