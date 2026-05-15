@@ -1,5 +1,4 @@
 import PropertyCard from '@/components/PropertyCard';
-import FilterSidebar from '@/components/FilterSidebar';
 import { mockProperties } from '@/lib/mockData';
 
 export default function PropertiesPage() {
@@ -20,32 +19,24 @@ export default function PropertiesPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters */}
-          <aside className="lg:w-80 flex-shrink-0">
-            <FilterSidebar type="properties" />
-          </aside>
-
-          {/* Results */}
-          <main className="flex-1">
-            {properties.length === 0 ? (
-              <div className="text-center py-16">
-                <p className="text-xl text-gray-600">
-                  No properties found matching your criteria.
-                </p>
-                <p className="text-gray-500 mt-2">
-                  Try adjusting your filters or search terms.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {properties.map((property: any) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
-              </div>
-            )}
-          </main>
-        </div>
+        <main className="w-full">
+          {properties.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-xl text-gray-600">
+                No properties found matching your criteria.
+              </p>
+              <p className="text-gray-500 mt-2">
+                Try adjusting your filters or search terms.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {properties.map((property: any) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

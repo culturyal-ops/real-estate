@@ -1,5 +1,4 @@
 import LandCard from '@/components/LandCard';
-import FilterSidebar from '@/components/FilterSidebar';
 import { mockLands } from '@/lib/mockData';
 
 export default function LandsPage() {
@@ -20,27 +19,21 @@ export default function LandsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-80 flex-shrink-0">
-            <FilterSidebar type="lands" />
-          </aside>
-
-          <main className="flex-1">
-            {lands.length === 0 ? (
-              <div className="text-center py-16">
-                <p className="text-xl text-gray-600">
-                  No land plots found matching your criteria.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {lands.map((land: any) => (
-                  <LandCard key={land.id} land={land} />
-                ))}
-              </div>
-            )}
-          </main>
-        </div>
+        <main className="w-full">
+          {lands.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-xl text-gray-600">
+                No land plots found matching your criteria.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {lands.map((land: any) => (
+                <LandCard key={land.id} land={land} />
+              ))}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
